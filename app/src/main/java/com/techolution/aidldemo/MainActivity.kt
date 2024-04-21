@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var isProcessActive = false
 
 
-
+    lateinit var coroutineScope: CoroutineScope
     private val mConnection = object :ServiceConnection{
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             serverProcess = IMyAidlInterface.Stub.asInterface(service)
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        coroutineScope = CoroutineScope(Dispatchers.Main)
 
         binding.startAnotherProcess.setOnClickListener {
             initProcess()
@@ -112,7 +113,11 @@ class MainActivity : AppCompatActivity() {
 
     private val listenDataFromCallBack = object : IMyAidlInterfaceCallBack.Stub(){
         override fun getPriceData(id: Int, price: Int) {
-            Log.d(TAG, "getPriceData: $price $id")
+            coroutineScope.launch {
+                binding.price.text = "$price rupees"
+                binding.id.text = "$id items"
+                Log.d(TAG, "getPriceData: $price $id")
+            }
         }
 
     }
