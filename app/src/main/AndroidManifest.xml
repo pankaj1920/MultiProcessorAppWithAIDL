@@ -28,7 +28,7 @@
         </activity>
 
         <service
-            android:name="com.techolution.aidldemo.DemoService"
+            android:name="com.techolution.process.AnotherProcessService"
             android:enabled="true"
             android:exported="true"
             android:process=":serviceProcess"
